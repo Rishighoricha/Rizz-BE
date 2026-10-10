@@ -61,23 +61,20 @@ io.on("connection",(socket)=>{
     .then((result)=>socket.emit("history",result))
     .catch((err)=>console.log(err))
   }
-  console.log("User connected")
-  socket.on("getHistory",sendHistory)
+  
+  console.log("User connected:", socket.id);
+  
+  // History bhejne ka event
+  socket.on("getHistory", sendHistory);
 
+  // Message receive aur send karne ka event (Sirf 1 baar hona chahiye)
   socket.on("message",(data)=>{
-      io.emit("message",data)
+      io.emit("message",data);
       collec.insertOne(data);
-  })
-    console.log("User connected")
-
-    socket.on("message",(data)=>{
-        io.emit("message",data)
-        collec.insertOne(data);
-    })
+  });
 
   socket.on("disconnect", () => {
     console.log("Disconnected:", socket.id);
   });
 });
-
 httpServer.listen(3000, () => console.log("Server is alive at 3000"));
